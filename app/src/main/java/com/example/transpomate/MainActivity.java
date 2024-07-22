@@ -3,6 +3,7 @@ package com.example.transpomate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,19 +61,21 @@ public class MainActivity extends AppCompatActivity {
         buttonViewBus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String selectedRoute = spinnerRoutes.getSelectedItem().toString();
-                String selectedBus = spinnerBuses.getSelectedItem().toString();
-
-                if (selectedRoute.isEmpty() || selectedBus.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please select both route and bus", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Bus bus = busDetailsMap.get(selectedBus);
-                if (bus != null) {
-                    showBusDetails(bus);
+                String selectedBus = (String) spinnerBuses.getSelectedItem();
+                if (selectedBus != null && !selectedBus.isEmpty()) {
+                    Bus bus = busDetailsMap.get(selectedBus);
+                    if (bus != null) {
+                        Intent intent = new Intent(MainActivity.this, BusDetailsActivity.class);
+                        intent.putExtra("busInfo", bus.info);
+                        intent.putExtra("busSeats", bus.seatsAvailable);
+                        intent.putExtra("busLat", bus.location.lat);
+                        intent.putExtra("busLng", bus.location.lng);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Invalid bus data", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(MainActivity.this, "Invalid bus data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please select a bus", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -127,10 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Failed to load buses", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void showBusDetails(Bus bus) {
-        // Implement this method to show bus details in a new UI
     }
 
     public static class Bus {

@@ -1,44 +1,54 @@
 package com.example.transpomate;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class BusDetailsActivity extends AppCompatActivity {
 
-    private TextView textViewBusDetails;
-    private TextView textViewSeatsAvailable;
-    private Button buttonViewBusLocation;
-    private String busDetails;
-    private int seatsAvailable;
-    private double latitude;
-    private double longitude;
+    private TextView textViewBusInfo, textViewSeatsAvailable;
+    private Button buttonViewBusLocation, buttonReserveSeat;
+
+    private double busLat, busLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_details);
 
-        textViewBusDetails = findViewById(R.id.textViewBusDetails);
+        textViewBusInfo = findViewById(R.id.textViewBusDetails);
         textViewSeatsAvailable = findViewById(R.id.textViewSeatsAvailable);
         buttonViewBusLocation = findViewById(R.id.buttonViewBusLocation);
+        buttonReserveSeat = findViewById(R.id.buttonReserveSeat);
 
-        busDetails = getIntent().getStringExtra("busDetails");
-        seatsAvailable = Integer.parseInt(getIntent().getStringExtra("seatsAvailable"));
-        latitude = getIntent().getDoubleExtra("latitude", 0);
-        longitude = getIntent().getDoubleExtra("longitude", 0);
+        // Retrieve data from intent
+        String busInfo = getIntent().getStringExtra("busInfo");
+        int seatsAvailable = getIntent().getIntExtra("busSeats", 0);
+        busLat = getIntent().getDoubleExtra("busLat", 0);
+        busLng = getIntent().getDoubleExtra("busLng", 0);
 
-        textViewBusDetails.setText(busDetails);
-        textViewSeatsAvailable.setText("Seats Available: " + seatsAvailable);
+        textViewBusInfo.setText(busInfo);
+        textViewSeatsAvailable.setText(String.valueOf("Seats Available: " + seatsAvailable));
 
-        buttonViewBusLocation.setOnClickListener(v -> {
-            Intent intent = new Intent(BusDetailsActivity.this, MapsActivity.class);
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-            startActivity(intent);
+        buttonViewBusLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusDetailsActivity.this, BusLocationActivity.class);
+                intent.putExtra("busLat", busLat);
+                intent.putExtra("busLng", busLng);
+                startActivity(intent);
+            }
+        });
+
+        buttonReserveSeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle seat reservation logic here
+            }
         });
     }
 }
