@@ -2,4 +2,6 @@
     <string name="app_name">TranspoMate</string>
     <string name="select_route">Select Route</string>
     <string name="select_bus">Select Bus</string>
+    <string name="MAPS_API_KEY">add api key here</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
