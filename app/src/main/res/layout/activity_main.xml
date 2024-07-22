@@ -52,7 +52,7 @@
         android:id="@+id/buttonViewBus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VIEW BUS"
+        android:text="@string/view_bus"
         android:layout_marginTop="20dp"
         android:layout_below="@id/spinnerBuses"
         android:layout_centerHorizontal="true"/>

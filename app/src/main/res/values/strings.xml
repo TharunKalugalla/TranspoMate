@@ -16,5 +16,6 @@
     <string name="failed_to_load_data">Failed to load data</string>
     <string name="MAPS_API_KEY">AIzaSyAoMQGYDw2zZz5W90UeqNfetmHpgtxQYuY</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="view_bus">VIEW BUS</string>
 
 </resources>

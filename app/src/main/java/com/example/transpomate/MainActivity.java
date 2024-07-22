@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonViewBus;
     private DatabaseReference databaseReference;
 
-    private Map<String, List<String>> routeBusMap = new HashMap<>();
-    private Map<String, Bus> busDetailsMap = new HashMap<>();
-    private List<String> routes = new ArrayList<>();
+    private Map<String, String> routeMap = new HashMap<>();
+    private Map<String, List<Bus>> routeBusMap = new HashMap<>();
+    private List<String> routeDisplayList = new ArrayList<>();
+    private List<String> busDisplayList = new ArrayList<>();
+    private List<Bus> selectedRouteBuses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         spinnerRoutes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedRoute = routes.get(position);
-                loadBusData(selectedRoute);
+                String selectedRouteKey = routeDisplayList.get(position).split(" - ")[0];
+                loadBusData(selectedRouteKey);
             }
 
             @Override
@@ -61,19 +63,15 @@ public class MainActivity extends AppCompatActivity {
         buttonViewBus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String selectedBus = (String) spinnerBuses.getSelectedItem();
-                if (selectedBus != null && !selectedBus.isEmpty()) {
-                    Bus bus = busDetailsMap.get(selectedBus);
-                    if (bus != null) {
-                        Intent intent = new Intent(MainActivity.this, BusDetailsActivity.class);
-                        intent.putExtra("busInfo", bus.info);
-                        intent.putExtra("busSeats", bus.seatsAvailable);
-                        intent.putExtra("busLat", bus.location.lat);
-                        intent.putExtra("busLng", bus.location.lng);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Invalid bus data", Toast.LENGTH_SHORT).show();
-                    }
+                int selectedBusPosition = spinnerBuses.getSelectedItemPosition();
+                if (selectedBusPosition >= 0 && selectedBusPosition < selectedRouteBuses.size()) {
+                    Bus bus = selectedRouteBuses.get(selectedBusPosition);
+                    Intent intent = new Intent(MainActivity.this, BusDetailsActivity.class);
+                    intent.putExtra("busInfo", bus.info);
+                    intent.putExtra("busSeats", bus.seatsAvailable);
+                    intent.putExtra("busLat", bus.location.lat);
+                    intent.putExtra("busLng", bus.location.lng);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Please select a bus", Toast.LENGTH_SHORT).show();
                 }
@@ -85,13 +83,16 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.child("routes").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                routes.clear();
+                routeMap.clear();
+                routeDisplayList.clear();
                 for (DataSnapshot routeSnapshot : dataSnapshot.getChildren()) {
-                    String route = routeSnapshot.getKey();
-                    routes.add(route);
+                    String routeKey = routeSnapshot.getKey();
+                    String routeName = routeSnapshot.getValue(String.class);
+                    routeMap.put(routeKey, routeName);
+                    routeDisplayList.add(routeKey + " - " + routeName);
                 }
                 ArrayAdapter<String> routeAdapter = new ArrayAdapter<>(MainActivity.this,
-                        android.R.layout.simple_spinner_item, routes);
+                        android.R.layout.simple_spinner_item, routeDisplayList);
                 routeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerRoutes.setAdapter(routeAdapter);
             }
@@ -103,23 +104,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadBusData(String route) {
-        databaseReference.child("buses").child(route).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void loadBusData(String routeKey) {
+        databaseReference.child("buses").child(routeKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> buses = new ArrayList<>();
+                selectedRouteBuses.clear();
+                busDisplayList.clear();
                 for (DataSnapshot busSnapshot : dataSnapshot.getChildren()) {
-                    String bus = busSnapshot.getKey();
-                    buses.add(bus);
-                    Bus busDetails = busSnapshot.getValue(Bus.class);
-                    busDetailsMap.put(bus, busDetails);
+                    Bus bus = busSnapshot.getValue(Bus.class);
+                    selectedRouteBuses.add(bus);
+                    busDisplayList.add(bus.departureTime + " - " + bus.info);
                 }
 
-                if (buses.isEmpty()) {
+                if (busDisplayList.isEmpty()) {
                     Toast.makeText(MainActivity.this, "No buses available for the selected route", Toast.LENGTH_SHORT).show();
                 } else {
                     ArrayAdapter<String> busAdapter = new ArrayAdapter<>(MainActivity.this,
-                            android.R.layout.simple_spinner_item, buses);
+                            android.R.layout.simple_spinner_item, busDisplayList);
                     busAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerBuses.setAdapter(busAdapter);
                 }
