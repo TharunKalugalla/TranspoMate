@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "426035480779",
+    "project_id": "transpomate-2c401",
+    "storage_bucket": "transpomate-2c401.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426035480779:android:64a13adf323d83d40d334e",
+        "android_client_info": {
+          "package_name": "com.example.transpomate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9g1kqa_4-K6cEmMTcRl7aUeZrjmR7I6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
