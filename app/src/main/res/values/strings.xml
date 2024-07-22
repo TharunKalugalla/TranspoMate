@@ -2,6 +2,19 @@
     <string name="app_name">TranspoMate</string>
     <string name="select_route">Select Route</string>
     <string name="select_bus">Select Bus</string>
-    <string name="MAPS_API_KEY">add api key here</string>
+    <string name="label_route">Select Route</string>
+    <string name="label_bus">Select Bus</string>
+    <string name="button_view_bus">VIEW BUS</string>
+    <string name="view_bus_location">View Bus Location</string>
+    <string name="reserve_seat">Reserve Seat</string>
+    <string name="no_data_available">No data available for the selected route</string>
+    <string name="loading_data">Loading data...</string>
+    <string name="location_permission_denied">Location permission denied</string>
+    <string name="location_permission_granted">Location permission granted</string>
+    <string name="please_select_route_bus">Please select both route and bus</string>
+    <string name="invalid_bus_data">Invalid bus data</string>
+    <string name="failed_to_load_data">Failed to load data</string>
+    <string name="MAPS_API_KEY">AIzaSyAoMQGYDw2zZz5W90UeqNfetmHpgtxQYuY</string>
     <string name="title_activity_maps">MapsActivity</string>
+
 </resources>
