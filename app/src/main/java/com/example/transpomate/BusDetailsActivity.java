@@ -13,6 +13,7 @@ public class BusDetailsActivity extends AppCompatActivity {
     private TextView textViewBusInfo, textViewSeatsAvailable;
     private Button buttonViewBusLocation, buttonReserveSeat;
 
+    private String busRoute, busId;
     private double busLat, busLng;
 
     @Override
@@ -26,6 +27,8 @@ public class BusDetailsActivity extends AppCompatActivity {
         buttonReserveSeat = findViewById(R.id.buttonReserveSeat);
 
         // Retrieve data from intent
+        busRoute = getIntent().getStringExtra("busRoute");
+        busId = getIntent().getStringExtra("busId");
         String busInfo = getIntent().getStringExtra("busInfo");
         int seatsAvailable = getIntent().getIntExtra("busSeats", 0);
         busLat = getIntent().getDoubleExtra("busLat", 0);
@@ -38,8 +41,8 @@ public class BusDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BusDetailsActivity.this, BusLocationActivity.class);
-                intent.putExtra("busLat", busLat);
-                intent.putExtra("busLng", busLng);
+                intent.putExtra("busRoute", busRoute);
+                intent.putExtra("busId", busId);
                 startActivity(intent);
             }
         });

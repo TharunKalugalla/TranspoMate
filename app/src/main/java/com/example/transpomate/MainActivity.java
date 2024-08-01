@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedBusPosition >= 0 && selectedBusPosition < selectedRouteBuses.size()) {
                     Bus bus = selectedRouteBuses.get(selectedBusPosition);
                     Intent intent = new Intent(MainActivity.this, BusDetailsActivity.class);
+                    intent.putExtra("busRoute", routeDisplayList.get(spinnerRoutes.getSelectedItemPosition()).split(" - ")[0]);
+                    intent.putExtra("busId", bus.id);
                     intent.putExtra("busInfo", bus.info);
                     intent.putExtra("busSeats", bus.seatsAvailable);
                     intent.putExtra("busLat", bus.location.lat);
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 busDisplayList.clear();
                 for (DataSnapshot busSnapshot : dataSnapshot.getChildren()) {
                     Bus bus = busSnapshot.getValue(Bus.class);
+                    bus.id = busSnapshot.getKey();  // Store the bus ID
                     selectedRouteBuses.add(bus);
                     busDisplayList.add(bus.departureTime + " - " + bus.info);
                 }
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class Bus {
+        public String id; // Add this field to store the bus ID
         public String info;
         public String departureTime;
         public int seatsAvailable;
